@@ -1,17 +1,20 @@
 <template>
-  <div class="home">
-    <SearchBar msg="Welcome to Your Vue.js App"/>
+  <div>
+    <SearchBar />
+    <MoviesCard />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import SearchBar from '@/components/SearchBar.vue'
+import SearchBar from '@/components/SearchBar.vue';
+import MoviesCard from '@/components/MoviesCard.vue';
 
 export default {
   name: 'Home',
   components: {
-    SearchBar
+    SearchBar,
+    MoviesCard
   }
 }
 </script>
