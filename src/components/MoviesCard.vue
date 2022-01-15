@@ -2,9 +2,10 @@
   <div class="container mx-auto text-center mt-6 md:container md:mx-auto">
     <div class="grid grid-cols-4 gap-4">
       <div
-        class="border-solid border-2 border-gray-400 rounded-md flex"
+        class="border-solid border-2 border-gray-400 rounded-md flex cursor-pointer"
         v-for="(item, index) of movies"
         :key="index"
+        @click="test(item.id)"
       >
         <div class="bg-gray-200">
           <img :src="getImage(item.poster_path)" class="" />
@@ -19,12 +20,6 @@
           </div>
         </div>
       </div>
-      <!-- ... -->
-      <div>9</div>
-      <!-- ... -->
-      <div>9</div>
-      <!-- ... -->
-      <div>9</div>
     </div>
   </div>
 </template>
@@ -50,18 +45,20 @@ export default {
         .get("discover/movie/?api_key=910b40e40fa0147961ad9e269ef40abc")
         .then((res) => {
           this.movies = res.data.results;
-          console.log(this.movies);
         });
     },
     getImage(path) {
       let defaultImage = "@/assets/farmer.png"; // just set default
-      let address = `https://image.tmdb.org/t/p/original/-${path}`;
+      let address = `https://image.tmdb.org/t/p/original${path}`;
       try {
-        return require(address);
+        return address;
       } catch (e) {
-        return defaultImage;
+        return require(defaultImage);
       }
     },
+    test(id) {
+      this.$router.push({ name: 'Movie', params: { movieId: id } }).catch();
+    }
   },
 };
 </script>
