@@ -26,7 +26,7 @@
         <i class="fa fa-arrow-left"></i>
         Back
       </button>
-      <h1 class="text-pink-500 font-bold ml-1.5">{{title}}</h1>
+      <h1 class="text-gray-900 font-bold mx-auto text-2xl">{{title}}</h1>
     </div>
   </div>
 </template>

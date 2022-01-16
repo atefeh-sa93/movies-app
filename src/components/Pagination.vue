@@ -1,104 +1,276 @@
 <template>
   <div class="container mx-auto text-center mt-6 md:container md:mx-auto">
-    <div class="flex items-center justify-center space-x-1">
-      <a
-        href="#"
-        class="flex items-center px-4 py-2 text-gray-500 bg-gray-300 rounded-md"
+    <ul v-if="total_pages > 1" class="flex justify-center pl-0 list-none rounded my-2">
+      <li
+        class="
+          leading-tight
+          bg-white
+          border border-gray-300 border-r-0
+          ml-0
+          rounded-l
+          hover:bg-gray-400
+        "
+        :class="{ 'bg-gray-200': isInFirstPage }"
       >
-        Previous
-      </a>
+        <button
+          type="button"
+          class="py-2 px-3"
+          :class="{ 'cursor-not-allowed': isInFirstPage }"
+          :disabled="isInFirstPage"
+          @click="gotoFirst"
+        >
+          &laquo;
+        </button>
+      </li>
 
-      <a
-        href="#"
+      <li
         class="
-          px-4
-          py-2
-          text-gray-700
-          bg-gray-200
-          rounded-md
-          hover:bg-blue-400 hover:text-white
+          leading-tight
+          bg-white
+          border border-gray-300 border-r-0
+          hover:bg-gray-400
         "
+        :class="{ 'bg-gray-200': isInFirstPage }"
       >
-        1
-      </a>
-      <a
-        href="#"
+        <button
+          type="button"
+          class="py-2 px-3"
+          :class="{ 'cursor-not-allowed': isInFirstPage }"
+          :disabled="isInFirstPage"
+          @click="gotoPrevious"
+        >
+          &lsaquo;
+        </button>
+      </li>
+
+      <template v-if="showDots('left')">
+        <li
+          class="
+            leading-tight
+            bg-white
+            border border-gray-300 border-r-0
+            hover:bg-gray-400
+          "
+          :class="{ 'bg-gray-600': isInFirstPage }"
+        >
+          <button
+            type="button"
+            class="py-2 px-3"
+            :class="{ 'cursor-not-allowed': isInFirstPage }"
+            :disabled="isInFirstPage"
+            @click="gotoPageNumber(1)"
+          >
+            1
+          </button>
+        </li>
+
+        <li
+          class="
+            leading-tight
+            bg-white
+            border border-gray-300 border-r-0
+            hover:bg-gray-400
+          "
+        >
+          <button type="button" class="py-2 px-3" :disabled="true">...</button>
+        </li>
+      </template>
+
+      <li
         class="
-          px-4
-          py-2
-          text-gray-700
-          bg-gray-200
-          rounded-md
-          hover:bg-blue-400 hover:text-white
+          leading-tight
+          bg-white
+          border border-gray-300 border-r-0
+          hover:bg-gray-400
         "
+        v-for="(page, index) in pages"
+        :key="`pages_${index}`"
+        :class="{ 'bg-gray-600': page === currentPage }"
       >
-        2
-      </a>
-      <a
-        href="#"
+        <button
+          type="button"
+          class="py-2 px-3"
+          :class="{ 'cursor-not-allowed': page === currentPage }"
+          :disabled="page === currentPage"
+          @click="gotoPageNumber(page)"
+        >
+          {{ page }}
+        </button>
+      </li>
+
+      <template v-if="showDots('right')">
+        <li
+          class="
+            leading-tight
+            bg-white
+            border border-gray-300 border-r-0
+            hover:bg-gray-400
+          "
+        >
+          <button type="button" class="py-2 px-3" :disabled="true">...</button>
+        </li>
+
+        <li
+          class="
+            leading-tight
+            bg-white
+            border border-gray-300 border-r-0
+            hover:bg-gray-400
+          "
+          :class="{ 'bg-gray-600': isInLastPage }"
+        >
+          <button
+            type="button"
+            class="py-2 px-3"
+            :class="{ 'cursor-not-allowed': isInLastPage }"
+            :disabled="isInLastPage"
+            @click="gotoPageNumber(total_pages)"
+          >
+            {{ total_pages }}
+          </button>
+        </li>
+      </template>
+
+      <li
         class="
-          px-4
-          py-2
-          text-gray-700
-          bg-gray-200
-          rounded-md
-          hover:bg-blue-400 hover:text-white
+          leading-tight
+          bg-white
+          border border-gray-300 border-r-0
+          hover:bg-gray-400
         "
+        :class="{ 'bg-gray-200': isInLastPage }"
       >
-        3
-      </a>
-      <a
-        href="#"
+        <button
+          type="button"
+          class="py-2 px-3"
+          :class="{ 'cursor-not-allowed': isInLastPage }"
+          :disabled="isInLastPage"
+          @click="gotoNext"
+        >
+          &rsaquo;
+        </button>
+      </li>
+
+      <li
         class="
-          px-4
-          py-2
-          font-bold
-          text-gray-500
-          bg-gray-300
-          rounded-md
-          hover:bg-blue-400 hover:text-white
+          leading-tight
+          bg-white
+          border border-gray-300 border-r-0
+          rounded-r
+          border-r
+          hover:bg-gray-400
         "
+        :class="{ 'bg-gray-200': isInLastPage }"
       >
-        Next
-      </a>
-    </div>
-    <div>
-      <p class="text-sm leading-5 text-gray-700">
-        Showing
-        <span class="font-medium" x-text="firstItem()"></span>
-        to
-        <span class="font-medium" x-text="lastItem()"></span>
-        of
-        <span class="font-medium" x-text="total"></span>
-        results
-      </p>
-    </div>
+        <button
+          type="button"
+          class="py-2 px-3"
+          :class="{ 'cursor-not-allowed': isInLastPage }"
+          :disabled="isInLastPage"
+          @click="gotoLast"
+        >
+          &raquo;
+        </button>
+      </li>
+    </ul>
+    <p class="pl-0 py-2 rounded my-2 text-xs xs:text-sm text-gray-900">
+      Showing {{ (currentPage - 1) * per_page + 1 }} to
+      {{ currentPage * per_page }} of {{ total }} Entries
+    </p>
   </div>
 </template>
 
 <script>
 export default {
   name: "Pagination",
-  data() {
-    return {
-      perPage: 15,
-    };
+  props: {
+    currentPage: { type: Number, required: true, default: 1 },
+    pagination: { type: Object, required: true, default: () => ({}) },
+    maxVisibleButtons: { type: Number, required: false, default: 5 },
   },
+
+  data: () => ({
+    per_page: 20,
+    total: 0,
+    total_pages: 0,
+  }),
+
+  watch: {
+    pagination: {
+      handler(pagination) {
+        this.per_page = pagination.per_page || 10;
+        this.total = pagination.total || 0;
+        this.total_pages = pagination.total_pages || 0;
+      },
+      immediate: true,
+    },
+  },
+
   computed: {
-    totalPages() {
-      return Math.round(this.total / this.perPage);
+    isInFirstPage() {
+      return this.currentPage === 1;
+    },
+
+    isInLastPage() {
+      return this.currentPage === this.total_pages;
+    },
+
+    pages() {
+      const range = [];
+
+      for (let i = this.startPage; i <= this.endPage; i += 1) {
+        range.push(i);
+      }
+
+      return range;
+    },
+
+    startPage() {
+      if (this.currentPage === 1) {
+        return 1;
+      }
+
+      if (this.currentPage === this.total_pages) {
+        return this.total_pages - this.maxVisibleButtons + 1;
+      }
+
+      return this.currentPage - 1;
+    },
+
+    endPage() {
+      return Math.min(
+        this.startPage + this.maxVisibleButtons - 1,
+        this.total_pages
+      );
     },
   },
+
   methods: {
-    firstItem() {
-      return this.perPage * this.currentPage - 15 + 1;
+    showDots(position = "left") {
+      const number = position === "left" ? 1 : this.total_pages;
+      const nextNumber = position === "left" ? 2 : this.total_pages - 1;
+
+      return !this.pages.includes(number) || !this.pages.includes(nextNumber);
     },
-    lastItem() {
-      let lastItem = this.perPage * this.currentPage;
-      if (lastItem > this.total) {
-        return this.total;
-      }
-      return this.perPage * this.currentPage;
+
+    gotoFirst() {
+      this.gotoPageNumber(1);
+    },
+
+    gotoLast() {
+      this.gotoPageNumber(this.total_pages);
+    },
+
+    gotoPrevious() {
+      this.gotoPageNumber(this.currentPage - 1);
+    },
+
+    gotoNext() {
+      this.gotoPageNumber(this.currentPage + 1);
+    },
+
+    gotoPageNumber(pageNumber) {
+      this.$emit("pagechanged", pageNumber);
     },
   },
 };
