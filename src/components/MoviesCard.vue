@@ -10,9 +10,9 @@
           bg-gray-200
           p-1
         "
-        v-for="(item, index) of movies"
+        v-for="(item, index) of moviesDatail"
         :key="index"
-        @click="test(item.id)"
+        @click="goToDetail(item.id)"
       >
         <img
           :src="getImage(item.poster_path)"
@@ -40,25 +40,22 @@ import axios from "axios";
 export default {
   name: "MoviesCard",
 
+  props: {
+    moviesDatail: {
+      type: Array,
+    }
+  },
+
   data() {
     return {
-      movies: [],
       genres: []
     };
   },
 
-  mounted() {
-    this.fethchData();
+  created() {
     this.getGenersData();
   },
   methods: {
-    fethchData() {
-      axios
-        .get("discover/movie/?api_key=910b40e40fa0147961ad9e269ef40abc")
-        .then((res) => {
-          this.movies = res.data.results;
-        });
-    },
     getImage(path) {
       let defaultImage = "@/assets/farmer.png"; // just set default
       let address = `https://image.tmdb.org/t/p/original${path}`;
@@ -75,7 +72,7 @@ export default {
           this.genres = res.data.genres;
         });
     },
-    test(id) {
+    goToDetail(id) {
       this.$router.push({ name: "Movie", params: { movieId: id } }).catch();
     },
   },
