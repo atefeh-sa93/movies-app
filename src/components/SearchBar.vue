@@ -13,7 +13,7 @@
     <div class="flex justify-between">
       <div class="flex items-center">
         <h1 class="mx-7">Search by realse date:</h1>
-        <date-picker v-model="dateRange" range format="DD-MM-YYYY"></date-picker>
+        <date-picker v-model="dateRange" range format="YYYY-MM-DD" valueType="format"></date-picker>
       </div>
       <button
         class="
@@ -25,6 +25,7 @@
           px-4
           rounded-full
         "
+        @click="searchForMovies(dateRange)"
       >
         Search
       </button>
@@ -40,8 +41,11 @@ export default {
       dateRange: "",
     };
   },
-  created() {
-    console.log(this.dateRange);
+
+  methods: {
+    searchForMovies(searchItems) {
+      this.$emit('searching', searchItems)
+    }
   }
 };
 </script>
