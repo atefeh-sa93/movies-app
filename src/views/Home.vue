@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SearchBar />
+    <SearchBar @searching="searched"/>
     <MoviesCard :moviesDatail="movies" />
     <Pagination
       :pagination="{
@@ -33,6 +33,8 @@ export default {
       totalPages: 0,
       totalItems: 0,
       currentPage: 1,
+      startDate: '',
+      endDate: ''
     };
   },
   created() {
@@ -49,8 +51,9 @@ export default {
   methods: {
     fethchData() {
       axios
-        .get(`discover/movie/?api_key=910b40e40fa0147961ad9e269ef40abc&page=${this.currentPage}`)
+        .get(`discover/movie/?api_key=910b40e40fa0147961ad9e269ef40abc&page=${this.currentPage}&primary_release_date.gte=${this.startDate}&primary_release_date.lte=${this.endDate}`)
         .then((res) => {
+          console.log(`discover/movie/?api_key=910b40e40fa0147961ad9e269ef40abc&page=${this.currentPage}`, {params: this.params});
           this.movies = res.data.results;
           this.totalPages = res.data.total_pages;
           this.totalItems = res.data.total_results;
@@ -60,6 +63,11 @@ export default {
     onPageChange(page) {
       this.currentPage = page;
     },
+    searched(val) {
+      this.startDate = val[0];
+      this.endDate = val[1];
+      this.fethchData();
+    }
   },
 };
 </script>
