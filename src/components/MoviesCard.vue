@@ -19,7 +19,7 @@
           class="object-cover h-auto w-48 rounded-tl-lg rounded-bl-lg"
         />
         <div class="details ml-5 text-left mt-2 relative w-screen">
-          <h3 class="text-xl font-extrabold text-gray-900	">{{ item.title }}</h3>
+          <h3 class="text-xl font-extrabold text-gray-900">{{ item.title }}</h3>
           <div class="absolute bottom-0 font-light">
             <i class="fas fa-calendar"></i>
             <span class="ml-3 mb-10">{{ item.release_date }}</span>
@@ -35,21 +35,13 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   name: "MoviesCard",
 
   props: {
     moviesDatail: {
       type: Array,
-    }
-  },
-
-  data() {
-    return {
-      genres: []
-    };
+    },
   },
 
   created() {
@@ -65,16 +57,10 @@ export default {
         return require(defaultImage);
       }
     },
-    getGenersData() {
-      axios
-        .get("genre/movie/list?api_key=910b40e40fa0147961ad9e269ef40abc")
-        .then((res) => {
-          this.genres = res.data.genres;
-        });
-    },
     goToDetail(id) {
       this.$router.push({ name: "Movie", params: { movieId: id } }).catch();
     },
   },
 };
 </script>
+

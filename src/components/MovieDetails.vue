@@ -1,3 +1,10 @@
+
+
+
+
+
+
+
 <template>
   <div class="container pt-2.5 md:container md:mx-auto">
     <div class="flex flex-wrap -mx-2 mb-8">
@@ -17,7 +24,7 @@
               </td>
               <td class="px-5 py-2 text-sm">
                 <p class="text-gray-900 whitespace-no-wrap">
-                  ${{ content ? content.budget : "-" }}
+                  ${{ content ? numberWithCommas(content.budget) : "-" }}
                 </p>
               </td>
             </tr>
@@ -31,7 +38,7 @@
               </td>
               <td class="px-5 py-2 text-sm">
                 <p class="text-gray-900 whitespace-no-wrap">
-                  ${{ content ? content.revenue : "-" }}
+                  ${{ content ? numberWithCommas(content.revenue) : "-" }}
                 </p>
               </td>
             </tr>
@@ -59,7 +66,7 @@
               </td>
               <td class="px-5 py-2 text-sm">
                 <p class="text-gray-900 whitespace-no-wrap">
-                  {{ content ? content.runtime : "-" }}
+                  {{ content ? timeConvert(content.runtime) : "-" }}
                 </p>
               </td>
             </tr>
@@ -74,7 +81,7 @@
               <td class="px-5 py-2 text-sm">
                 <p class="text-gray-900 whitespace-no-wrap">
                   {{ content ? content.vote_average : "-" }}
-                  ({{content ? content.vote_count : "-"}} votes)
+                  ({{ content ? content.vote_count : "-" }} votes)
                 </p>
               </td>
             </tr>
@@ -87,21 +94,29 @@
                 </div>
               </td>
               <td class="px-5 py-2 text-sm">
-                <ul class="text-gray-900 whitespace-no-wrap" v-for="(item,index) in content.genres" :key="index">
-                  <li>{{ item ? item.name : "-" }}</li>
-                </ul>
+                <span
+                  class="text-gray-900 whitespace-no-wrap pr-2"
+                  v-for="(item, index) in content.genres"
+                  :key="index"
+                >
+                  <span>{{ item ? item.name : "-" }}</span>
+                </span>
               </td>
             </tr>
-            <tr>
+            <tr v-if="content.homepage">
               <td class="px-5 py-2 text-sm">
                 <div class="flex">
                   <div class="flex-shrink-0 w-10 h-10">
-                    <p>Homepage Link:</p>
+                    <p>Homepage:</p>
                   </div>
                 </div>
               </td>
               <td class="px-5 py-2 text-sm">
-                <a class="text-blue-400 whitespace-no-wrap underline" :href="content.homepage" target="_blank">
+                <a
+                  class="text-blue-400 whitespace-no-wrap underline"
+                  :href="content.homepage"
+                  target="_blank"
+                >
                   Link
                 </a>
               </td>
@@ -122,14 +137,14 @@
 </template>
 
 <script>
-
+import { numberWithCommas, timeConvert } from "../helpers";
 export default {
   name: "MovieDetails",
 
   props: {
     content: {
-      type: Object,
-    }
+      type: [Array, Object],
+    },
   },
 
   computed: {
@@ -139,6 +154,10 @@ export default {
       }
       return `https://image.tmdb.org/t/p/original${this.content.poster_path}`;
     },
+  },
+  methods: {
+    numberWithCommas,
+    timeConvert,
   },
 };
 </script>
